@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+
+options {
+        buildDiscarder(logRotator(numToKeepStr: '3'))
+}
+
     environment {
         ENV_DIR = "Week-3/terraform-week3/environments/dev"  // Change this for different environments
     }
