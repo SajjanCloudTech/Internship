@@ -6,81 +6,54 @@ pipeline {
     }
 
     environment {
-        VAULT_ADDR = "http://18.118.27.69:8200"  // Removed trailing slash
+        VAULT_ADDR = "http://18.118.27.69:8200"
         VAULT_TOKEN = credentials('vault-token')
-        ENV_DIR = "Week-3/terraform-week3/environments/dev"  // Change this for different environments
+        ENV_DIR = "Week-3/terraform-week3/environments/dev"
     }
 
     stages {
         stage('SCM Checkout') {
             steps {
-                script {
-                    checkout scm
-                    sh "ls -R"  // Debugging: Show the structure after checkout
-                }
+                checkout scm
+                sh "ls -R"  // Debugging: Show the structure after checkout
             }
         }
 
-        stage('Debug Directory Structure') {
+        stage('Verify Environment Directory') {
             steps {
                 script {
-                    sh "pwd"  // Print the current directory
-                    sh "ls -l ${ENV_DIR} || echo 'ERROR: Directory ${ENV_DIR} does not exist!'"
+                    def dirExists = checkEnvDir()
+                    if (!dirExists) {
+                        error "ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
+                    }
                 }
             }
         }
 
         stage('Terraform Init') {
             steps {
-                script {
-                    def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
-                    if (dirExists == "exists") {
-                        sh "cd ${ENV_DIR} && terraform init"
-                    } else {
-                        error "ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
-                    }
-                }
+                sh "cd ${ENV_DIR} && terraform init"
             }
         }
 
-        // stage('Terraform Apply') {  // Un-commented this stage to ensure apply happens before destroy
+        stage('Terraform Apply') {
+            steps {
+                sh "cd ${ENV_DIR} && terraform apply -auto-approve"
+            }
+        }
+
+        // stage('Terraform Destroy') {
         //     steps {
-        //         script {
-        //             def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
-        //             if (dirExists == "exists") {
-        //                 sh "cd ${ENV_DIR} && terraform apply -auto-approve"
-        //             } else {
-        //                 error "ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
-        //             }
-        //         }
+        //         sh "cd ${ENV_DIR} && terraform destroy -auto-approve"
         //     }
         // }
+    }
 
-        stage('Terraform Destroy') {
-            steps {
-                script {
-                    def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
-                    if (dirExists == "exists") {
-                        sh "cd ${ENV_DIR} && terraform destroy -auto-approve"
-                    } else {
-                        error "ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
-                    }
-                }
+    post {
+        always {
+            script {
+                echo "Terraform pipeline completed with status: ${currentBuild.currentResult} in ${env.ENV_DIR}"
             }
         }
     }
-
-   post {
-    success {
-        script {
-            echo "Terraform pipeline completed successfully in ${env.ENV_DIR}!"
-        }
-    }
-    failure {
-        script {
-            echo "Terraform pipeline failed in ${env.ENV_DIR}!"
-        }
-    }
-}
-
 }
