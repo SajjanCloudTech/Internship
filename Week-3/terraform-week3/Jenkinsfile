@@ -15,18 +15,6 @@ pipeline {
         stage('SCM Checkout') {
             steps {
                 checkout scm
-                sh "ls -R"  // Debugging: Show the structure after checkout
-            }
-        }
-
-        stage('Verify Environment Directory') {
-            steps {
-                script {
-                    def dirExists = checkEnvDir()
-                    if (!dirExists) {
-                        error "ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
-                    }
-                }
             }
         }
 
