@@ -1,9 +1,9 @@
 provider "aws" {
   region  = "us-east-2"
  # profile = "default"
- access_key = data.vault_kv_secret_v2.aws_creds.data.data["access_key"]
- secret_key = data.vault_kv_secret_v2.aws_creds.data.data["secret_key"]
- token = data.vault_kv_secret_v2.aws_creds.data.data["token"]
+ access_key = data.vault_kv_secret_v2.aws_creds.data.data["aws_access_key_id"]
+ secret_key = data.vault_kv_secret_v2.aws_creds.data.data["aws_secret_access_key"]
+ token = data.vault_kv_secret_v2.aws_creds.data.data["aws_session_token"]
 }
 
 provider "vault" {
