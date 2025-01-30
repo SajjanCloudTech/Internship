@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        VAULT_ADDR = "http://18.118.27.69:8200"  // ✅ Removed trailing slash
+        VAULT_ADDR = "http://18.118.27.69:8200"  // Removed trailing slash
         VAULT_TOKEN = credentials('vault-token')
         ENV_DIR = "Week-3/terraform-week3/environments/dev"  // Change this for different environments
     }
@@ -43,7 +43,7 @@ pipeline {
             }
         }
 
-        stage('Terraform Apply') {  // ✅ Un-commented this stage to ensure apply happens before destroy
+        stage('Terraform Apply') {  // Un-commented this stage to ensure apply happens before destroy
             steps {
                 script {
                     def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
@@ -73,12 +73,12 @@ pipeline {
    post {
     success {
         script {
-            echo "✅ Terraform pipeline completed successfully in ${env.ENV_DIR}!"
+            echo "Terraform pipeline completed successfully in ${env.ENV_DIR}!"
         }
     }
     failure {
         script {
-            echo "❌ Terraform pipeline failed in ${env.ENV_DIR}!"
+            echo "Terraform pipeline failed in ${env.ENV_DIR}!"
         }
     }
 }
