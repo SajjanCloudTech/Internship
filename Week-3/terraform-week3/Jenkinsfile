@@ -42,20 +42,33 @@ options {
             }
         }
 
-        stage('Terraform Apply') {
+    //     stage('Terraform Apply') {
+    //         steps {
+    //             script {
+    //                 def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
+    //                 if (dirExists == "exists") {
+    //                     sh "cd ${ENV_DIR} && terraform apply -auto-approve"
+    //                 } else {
+    //                     error "❌ ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+stage('Terraform Destroy') {
             steps {
                 script {
                     def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
                     if (dirExists == "exists") {
-                        sh "cd ${ENV_DIR} && terraform apply -auto-approve"
+                        sh "cd ${ENV_DIR} && terraform destroy -auto-approve"
                     } else {
                         error "❌ ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
                     }
                 }
             }
         }
-    }
-
+    
     post {
         success {
             echo "✅ Terraform applied successfully in ${ENV_DIR}!"
