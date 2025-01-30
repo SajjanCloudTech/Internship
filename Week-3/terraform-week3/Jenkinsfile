@@ -9,12 +9,13 @@ pipeline {
         TF_DIR = "/terraform-week3/environments/dev"  
     }
 
-
-stage('Debug Workspace') {
-    steps {
-        script {
-            sh 'pwd'    // Print the current working directory
-            sh 'ls -R'  // List all files to confirm terraform-week3 exists
+stages{
+    stage('Debug Workspace') {
+        steps {
+            script {
+                sh 'pwd'    // Print the current working directory
+                sh 'ls -R'  // List all files to confirm terraform-week3 exists
+            }
         }
     }
 }
