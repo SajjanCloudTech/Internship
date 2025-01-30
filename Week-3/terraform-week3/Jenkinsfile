@@ -68,6 +68,7 @@ stage('Terraform Destroy') {
                 }
             }
         }
+    }    
     
     post {
         success {
