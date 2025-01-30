@@ -12,11 +12,11 @@ resource "aws_instance" "sajjan_web_server" {
     
   }
 
-# lifecycle {
-#   ignore_changes = [ 
-#     security_groups,
+lifecycle {
+  ignore_changes = [ 
+    security_groups,
     
-#    ]
-# }
+   ]
+}
 }
 
