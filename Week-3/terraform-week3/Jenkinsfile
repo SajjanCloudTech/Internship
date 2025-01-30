@@ -70,12 +70,17 @@ pipeline {
         // }
     }
 
-    post {
-        success {
-            echo "✅ Terraform pipeline completed successfully in ${ENV_DIR}!"
-        }
-        failure {
-            echo "❌ Terraform pipeline failed in ${ENV_DIR}!"
+   post {
+    success {
+        script {
+            echo "✅ Terraform pipeline completed successfully in ${env.ENV_DIR}!"
         }
     }
+    failure {
+        script {
+            echo "❌ Terraform pipeline failed in ${env.ENV_DIR}!"
+        }
+    }
+}
+
 }
