@@ -42,7 +42,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv6" {
 resource "aws_network_interface" "NIC" {
   subnet_id       = var.subnet_id
   private_ips     = ["10.0.1.50"]
-  security_groups = aws_security_group.allow_webtraffic.id
+  security_groups = [aws_security_group.allow_webtraffic.id]
 
 }
 
