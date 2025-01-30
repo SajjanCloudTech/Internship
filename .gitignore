@@ -1,0 +1,17 @@
+# Ignore Terraform-related directories and state files in Week-2
+Week-2/terraform/terraform-aws/.terraform/
+Week-2/terraform/terraform-aws/*.tfstate
+Week-2/terraform/terraform-aws/*.tfstate.*
+
+# Ignore Terraform-related directories and state files in Week-3
+Week-3/terraform/terraform-aws/.terraform/
+Week-3/terraform/terraform-aws/*.tfstate
+Week-3/terraform/terraform-aws/*.tfstate.*
+
+# Global Terraform ignores (if Terraform is used in other directories)
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Ignore Terraform crash logs
+crash.log
