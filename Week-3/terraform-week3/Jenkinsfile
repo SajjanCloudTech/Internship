@@ -1,14 +1,13 @@
 pipeline {
     agent any
 
-
-options {
+    options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
-}
+    }
 
     environment {
-        VAULT_ADDR = "http://18.118.27.69:8200/"
-        VAULT_TOKEN = credentials('vault-token') 
+        VAULT_ADDR = "http://18.118.27.69:8200"  // ✅ Removed trailing slash
+        VAULT_TOKEN = credentials('vault-token')
         ENV_DIR = "Week-3/terraform-week3/environments/dev"  // Change this for different environments
     }
 
@@ -26,7 +25,7 @@ options {
             steps {
                 script {
                     sh "pwd"  // Print the current directory
-                    sh "ls -l ${ENV_DIR} || echo 'ERROR: Directory ${ENV_DIR} does not exist!'" 
+                    sh "ls -l ${ENV_DIR} || echo 'ERROR: Directory ${ENV_DIR} does not exist!'"
                 }
             }
         }
@@ -44,7 +43,7 @@ options {
             }
         }
 
-        stage('Terraform Apply') {
+        stage('Terraform Apply') {  // ✅ Un-commented this stage to ensure apply happens before destroy
             steps {
                 script {
                     def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
@@ -56,28 +55,27 @@ options {
                 }
             }
         }
+
+        // stage('Terraform Destroy') {
+        //     steps {
+        //         script {
+        //             def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
+        //             if (dirExists == "exists") {
+        //                 sh "cd ${ENV_DIR} && terraform destroy -auto-approve"
+        //             } else {
+        //                 error "ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
+        //             }
+        //         }
+        //     }
+        // }
     }
 
-// stage('Terraform Destroy') {
-//             steps {
-//                 script {
-//                     def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
-//                     if (dirExists == "exists") {
-//                         sh "cd ${ENV_DIR} && terraform destroy -auto-approve"
-//                     } else {
-//                         error "ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
-//                     }
-//                 }
-//             }
-//         }
-//     }    
-    
     post {
         success {
-            echo "Terraform applied successfully in ${ENV_DIR}!"
+            echo "✅ Terraform pipeline completed successfully in ${ENV_DIR}!"
         }
         failure {
-            echo "Terraform apply failed in ${ENV_DIR}!"
+            echo "❌ Terraform pipeline failed in ${ENV_DIR}!"
         }
     }
 }
