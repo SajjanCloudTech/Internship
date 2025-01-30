@@ -13,5 +13,3 @@ Week-3/terraform/terraform-aws/*.tfstate.*
 *.tfstate
 *.tfstate.*
 
-# Ignore Terraform crash logs
-crash.log
