@@ -10,7 +10,7 @@ provider "vault" {
   address = "http://18.118.27.69:8200/"
 }
 
-# Fetch AWS credentials from Vault
+# Fetch AWS credentials from Vault!
 data "vault_kv_secret_v2" "aws_creds" {
   mount = "secret"
   name  = "aws_creds"
