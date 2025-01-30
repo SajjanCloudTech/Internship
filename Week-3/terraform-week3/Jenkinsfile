@@ -1,22 +1,62 @@
 pipeline {
     agent any
 
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '3')) 
-    }
-
     environment {
-        TF_DIR = "/terraform-week3/environments/dev"  
+        ENV_DIR = "Week-3/terraform-week3/environments/dev"  // Change this for different environments
     }
 
-stages{
-    stage('Debug Workspace') {
-        steps {
-            script {
-                sh 'pwd'    // Print the current working directory
-                sh 'ls -R'  // List all files to confirm terraform-week3 exists
+    stages {
+        stage('SCM Checkout') {
+            steps {
+                script {
+                    checkout scm
+                    sh "ls -R"  // Debugging: Show the structure after checkout
+                }
+            }
+        }
+
+        stage('Debug Directory Structure') {
+            steps {
+                script {
+                    sh "pwd"  // Print the current directory
+                    sh "ls -l ${ENV_DIR} || echo '❌ ERROR: Directory ${ENV_DIR} does not exist!'" 
+                }
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                script {
+                    def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
+                    if (dirExists == "exists") {
+                        sh "cd ${ENV_DIR} && terraform init"
+                    } else {
+                        error "❌ ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                script {
+                    def dirExists = sh(script: "test -d ${ENV_DIR} && echo exists", returnStdout: true).trim()
+                    if (dirExists == "exists") {
+                        sh "cd ${ENV_DIR} && terraform apply -auto-approve"
+                    } else {
+                        error "❌ ERROR: Terraform environment directory ${ENV_DIR} does not exist!"
+                    }
+                }
             }
         }
     }
-}
+
+    post {
+        success {
+            echo "✅ Terraform applied successfully in ${ENV_DIR}!"
+        }
+        failure {
+            echo "❌ Terraform apply failed in ${ENV_DIR}!"
+        }
+    }
 }
