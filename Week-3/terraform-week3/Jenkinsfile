@@ -9,38 +9,13 @@ pipeline {
         TF_DIR = "/terraform-week3/environments/dev"  
     }
 
-    stages {
-        stage('SCM Checkout') {
-            steps {
-                script {
-                       checkout scm
-                }
-            }
-        }
 
-        stage('Terraform Init') {
-            steps {
-                script {
-                    sh "cd ${TF_DIR} && terraform init"
-                }
-            }
-        }
-
-        stage('Terraform Apply') {
-            steps {
-                script {
-                    sh "cd ${TF_DIR} && terraform apply -auto-approve"
-                }
-            }
+stage('Debug Workspace') {
+    steps {
+        script {
+            sh 'pwd'    // Print the current working directory
+            sh 'ls -R'  // List all files to confirm terraform-week3 exists
         }
     }
-
-    post {
-        success {
-            echo "Terraform applied successfully in ${TF_DIR}!"
-        }
-        failure {
-            echo "Terraform apply failed in ${TF_DIR}!"
-        }
-    }
+}
 }
