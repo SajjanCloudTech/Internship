@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        VAULT_ADDR = "http://18.118.27.69:8200"
+        VAULT_ADDR = "http://3.146.176.62:8200"
         VAULT_TOKEN = credentials('vault-token')
         ENV_DIR = "Week-3/terraform-week3/environments/dev"
     }
