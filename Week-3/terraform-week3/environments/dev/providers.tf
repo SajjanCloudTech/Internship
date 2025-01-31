@@ -7,7 +7,7 @@ provider "aws" {
 }
 
 provider "vault" {
-  address = "http://18.118.27.69:8200/"
+  address = "http://3.147.36.82:8200"
 }
 
 
