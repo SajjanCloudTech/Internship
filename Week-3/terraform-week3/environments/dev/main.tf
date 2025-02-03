@@ -21,5 +21,5 @@ module "ec2" {
 }
 
 data "aws_dynamodb_table" "statelock" {
-  name = "terraform-state-lock"
+  name = "terraform-state-lock-dev"
 }
