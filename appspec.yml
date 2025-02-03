@@ -6,7 +6,7 @@ files:
     destination: /var/www/app1
 
   - source: Week-4/NodejsProject/app2/
-    destination: Week-4/NodejsProject/app2
+    destination: /var/www/app2
     
 file_exists_behavior: OVERWRITE
 
