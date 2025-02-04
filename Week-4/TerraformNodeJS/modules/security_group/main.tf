@@ -1,4 +1,4 @@
-# Create a new VPC
+
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr_block
   enable_dns_support   = true
@@ -9,7 +9,7 @@ resource "aws_vpc" "main" {
   }
 }
 
-# Create a Security Group inside the VPC
+
 resource "aws_security_group" "ec2_sg" {
   name_prefix = var.security_group_name
   vpc_id      = aws_vpc.main.id  
