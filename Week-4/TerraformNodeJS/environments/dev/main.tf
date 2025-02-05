@@ -20,7 +20,7 @@ module "ec2" {
   vpc_id               = var.vpc_id
   subnet_id            = var.subnet_id
   security_group_id    = var.security_group_id
-  iam_instance_profile = module.iam.iam_instance_profile
+  iam_instance_profile = module.iam.codedeploy_instance_profile
 }
 
 # CodeDeploy Module (Manages deployment)
@@ -32,7 +32,7 @@ module "codedeploy" {
 # CodePipeline Module (Manages CI/CD pipeline)
 module "codepipeline" {
   source                  = "../../modules/codepipeline"
-  pipeline_role_arn       = module.iam.pipeline_role_arn
+  pipeline_role_arn       = module.iam.codepipeline_role_arn
   s3_bucket               = module.s3.s3_bucket_name
   codedeploy_app_name     = module.codedeploy.codedeploy_app_name
   codedeploy_group_name   = "NodeJSDeploymentGroup"

@@ -1,5 +1,10 @@
 resource "aws_s3_bucket" "artifact_bucket" {
   bucket = var.bucket_name
+  force_destroy = true
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 # Enable S3 Block Public Access settings

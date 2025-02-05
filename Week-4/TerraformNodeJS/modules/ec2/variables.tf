@@ -16,7 +16,10 @@ variable "security_group_id" {
   description = "The security group ID to associate with the EC2 instance"
 }
 
-variable "iam_instance_profile" {}
+variable "iam_instance_profile" {
+  description = "IAM instance profile for CodeDeploy"
+}
+
 
 variable "subnet_id" {
   description = "The specific subnet ID where the EC2 instance will be launched"
