@@ -55,6 +55,12 @@ resource "aws_iam_role_policy_attachment" "codedeploy_attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
 }
 
+resource "aws_iam_role_policy_attachment" "codepipeline_admin_access" {
+  role       = aws_iam_role.codepipeline_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+
 # IAM Role for CodePipeline
 resource "aws_iam_role" "codepipeline_role" {
   name = "codepipeline-service-role"

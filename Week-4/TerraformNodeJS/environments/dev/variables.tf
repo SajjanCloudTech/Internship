@@ -3,7 +3,7 @@ variable "aws_region" {
 }
 
 variable "ami_id" {
-  default = "ami-0c55b159cbfafe1f0"
+  default = "ami-018875e7376831abe"
 }
 
 variable "instance_type" {
