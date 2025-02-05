@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = 5002;
 
-app.get('/', (req, res) => {
+app.get('/app2', (req, res) => {
     res.send('Hello from App 2 terraform & codedeploy!!');
 });
 
