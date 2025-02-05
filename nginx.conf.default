@@ -1,6 +1,6 @@
 user nginx;
 worker_processes auto;
-error_log /var/log/nginx/error.log warn;
+error_log /var/log/nginx/error.log;
 pid /run/nginx.pid;
 
 events {
@@ -10,23 +10,14 @@ events {
 http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
-
-    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
-                    '$status $body_bytes_sent "$http_referer" '
-                    '"$http_user_agent" "$http_x_forwarded_for"';
-
-    access_log /var/log/nginx/access.log main;
     sendfile on;
     keepalive_timeout 65;
-    gzip on;
 
-    # =====================================
-    #  SERVER CONFIG FOR NODE.JS APP1
-    # =====================================
     server {
         listen 80;
-        server_name 0.0.0.0;  # Accepts all requests
+        server_name _; # Use _ to match any domain/IP
 
+        # Proxy for App 1
         location /app1/ {
             proxy_pass http://localhost:5001/;
             proxy_http_version 1.1;
@@ -35,19 +26,11 @@ http {
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
             proxy_cache_bypass $http_upgrade;
         }
 
-        error_page 404 /404.html;
-    }
-
-    # =====================================
-    #  SERVER CONFIG FOR NODE.JS APP2
-    # =====================================
-    server {
-        listen 80;
-        server_name 0.0.0.0;
-
+        # Proxy for App 2
         location /app2/ {
             proxy_pass http://localhost:5002/;
             proxy_http_version 1.1;
@@ -56,10 +39,19 @@ http {
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
             proxy_cache_bypass $http_upgrade;
         }
 
+        # Serve static files (optional)
+        location /static/ {
+            root /var/www/html;
+        }
+
         error_page 404 /404.html;
+        location = /404.html {
+            root /usr/share/nginx/html;
+        }
     }
 }
 
