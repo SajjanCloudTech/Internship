@@ -27,6 +27,29 @@ resource "aws_codepipeline" "nodejs_pipeline" {
     }
   }
 
+stage {
+    name = "Approval"
+
+    action {
+      name             = "ManualApproval"
+      category         = "Approval"
+      owner            = "AWS"
+      provider         = "Manual"
+      version          = "1"
+      input_artifacts  = []
+      output_artifacts = []
+
+      configuration = {
+        NotificationArn   = "arn:aws:sns:us-east-2:664418970145:Manual-Approve"
+        # ExternalEntityLink = "http://example.com"
+        CustomData        = "The latest changes include feedback from Bob."
+      }
+
+      run_order = 1
+    }
+  }
+
+
   stage {
     name = "Deploy"
 
