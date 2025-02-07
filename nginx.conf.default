@@ -59,3 +59,5 @@ http {
 pm2 start /var/www/app1/server.js --name "app1"
 pm2 start /var/www/app2/server.js --name "app2"
 pm2 save
+
+#demo
