@@ -3,7 +3,7 @@ const app = express();
 const PORT = 5001;
 
 app.get('/app1', (req, res) => {
-    res.send('Hello from App 1 terraform & codedeploy!!');
+    res.send('Hello from App 1 terraform & codedeploy demo!!');
 });
 
 app.listen(PORT, () => {
