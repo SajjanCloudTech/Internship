@@ -22,4 +22,8 @@ permissions:
     group: ec2-user
     mode: 755
 
-
+hooks:
+  AfterInstall:
+    - location: Week-4/NodejsProject/scripts/restart_pm2.sh
+      timeout: 300
+      runas: root
