@@ -19,3 +19,19 @@ hooks:
     - location: Week-5/scripts/docker.sh
       timeout: 300
       runas: root
+
+
+# version: 0.0
+# resources:
+#   - TargetService:
+#       Type: AWS::ECS::Service
+#       Properties:
+#         TaskDefinition: "arn:aws:ecs:region:account-id:task-definition/task-def-name:1"
+#         LoadBalancerInfo:
+#           ContainerName: "nodejs-app"
+#           ContainerPort: 3000
+# hooks:
+#   BeforeInstall:
+#     - location: scripts/deploy.sh
+#       timeout: 300
+#       runas: root

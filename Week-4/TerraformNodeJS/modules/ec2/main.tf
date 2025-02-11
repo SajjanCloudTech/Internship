@@ -6,6 +6,7 @@ resource "aws_instance" "nodejs_server" {
   vpc_security_group_ids = [var.security_group_id]
   iam_instance_profile   = var.iam_instance_profile
   associate_public_ip_address = true
+  user_data_replace_on_change = true
 
 user_data = <<-EOF
   #!/bin/bash
