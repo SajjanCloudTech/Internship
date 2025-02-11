@@ -11,28 +11,21 @@ user_data = <<-EOF
   #!/bin/bash
   # Update system packages
   sudo yum update -y
-
-  # Install Node.js and npm (Amazon Linux 2)
-  sudo amazon-linux-extras enable epel
-  sudo amazon-linux-extras enable nodejs14
-  sudo yum install -y nodejs npm
-  
+ 
   # Install Ruby (Required for AWS CodeDeploy agent)
   sudo yum install -y ruby
-  
-  # Install AWS CLI
-  sudo yum install -y aws-cli
-  
-  # Install Nginx
-  sudo amazon-linux-extras enable nginx1
-  sudo yum install -y nginx
-  sudo systemctl start nginx
-  sudo systemctl enable nginx
 
-  # Install PM2 (Process Manager for Node.js)
-  sudo npm install -g pm2
-  pm2 startup systemd -u ec2-user --hp /home/ec2-user
-  pm2 save
+ # Install Docker
+  echo "Installing Docker..."
+  sudo amazon-linux-extras enable docker
+  sudo yum install -y docker
+  sudo systemctl start docker
+  sudo systemctl enable docker
+  sudo usermod -aG docker ec2-user  # Allow ec2-user to use Docker without sudo
+
+ # Ensure correct permissions for deployment scripts
+  echo "Setting permissions..."
+  sudo chmod +x /home/ec2-user/todoapp/scripts/docker.sh
 
   # Install and Start AWS CodeDeploy Agent
   cd /home/ec2-user
@@ -42,7 +35,6 @@ user_data = <<-EOF
   sudo systemctl start codedeploy-agent
   sudo systemctl enable codedeploy-agent
 EOF
-
 
 
   tags = {

@@ -1,0 +1,1 @@
+codestar_connection_arn = "arn:aws:codeconnections:us-east-2:664418970145:connection/aea06f50-ba54-426b-ab21-7409a62b2a65"
