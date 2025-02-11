@@ -9,13 +9,10 @@ resource "aws_instance" "nodejs_server" {
 
 user_data = <<-EOF
   #!/bin/bash
-  # Update system packages
-  sudo yum update -y
+  yum update -y
  
-  # Install Ruby (Required for AWS CodeDeploy agent)
-  sudo yum install -y ruby
+  yum install -y ruby
 
- # Install Docker
   echo "Installing Docker..."
   sudo amazon-linux-extras enable docker
   sudo yum install -y docker
