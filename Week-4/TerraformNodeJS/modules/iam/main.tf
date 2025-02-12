@@ -299,3 +299,38 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3_policy_attach" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = aws_iam_policy.codebuild_s3_policy.arn
 }
+
+resource "aws_iam_policy" "codebuild_ecr_policy" {
+  name        = "CodeBuild-ECR-Policy"
+  description = "Allows CodeBuild to authenticate and push images to ECR"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:CompleteLayerUpload",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart"
+        ]
+        Resource = "arn:aws:ecr:us-east-2:664418970145:repository/${var.ecr_repo_name}"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "codebuild_ecr_policy_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = aws_iam_policy.codebuild_ecr_policy.arn
+}

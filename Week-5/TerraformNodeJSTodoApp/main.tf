@@ -4,6 +4,7 @@
 module "iam" {
   source        = "../../Week-4/TerraformNodeJS/modules/iam"
   iam_role_name = var.iam_role_name
+  ecr_repo_name = module.ecr.repository_name
 }
 
 # S3 Bucket Module (Stores CodePipeline artifacts)

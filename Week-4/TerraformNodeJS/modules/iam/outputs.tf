@@ -26,3 +26,5 @@ output "codebuild_role_arn" {
   description = "IAM Role ARN for CodeBuild"
   value       = aws_iam_role.codebuild_role.arn
 }
+
+
