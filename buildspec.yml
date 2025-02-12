@@ -26,12 +26,8 @@ phases:
     commands:
       - echo "Pushing Docker image to AWS ECR..."
       - docker push $ECR_REPOSITORY_URL:latest
-      - echo "Generating deployment artifact..."
-      - printf '{"ImageURI":"%s"}' $ECR_REPOSITORY_URL:latest > imageDetail.json
-      - echo "Uploading deployment artifact to S3..."
-      - aws s3 cp imageDetail.json s3://$S3_BUCKET/imageDetail.json
       - echo "Build and push completed successfully!"
 
 artifacts:
   files:
-    - imageDetail.json
+    - **/*
