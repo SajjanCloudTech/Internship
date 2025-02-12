@@ -393,3 +393,35 @@ resource "aws_iam_role_policy_attachment" "ecr_attach" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = aws_iam_policy.ecr_policy.arn
 }
+
+resource "aws_iam_policy" "ec2_ecr_policy" {
+  name        = "EC2-ECR-Pull-Policy"
+  description = "Allows EC2 instances to authenticate and pull Docker images from ECR"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ]
+        Resource = "arn:aws:ecr:us-east-2:664418970145:repository/nodejs-todo-app"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_ecr_attach" {
+  role       = aws_iam_role.codedeploy_ec2_role.name
+  policy_arn = aws_iam_policy.ec2_ecr_policy.arn
+}
