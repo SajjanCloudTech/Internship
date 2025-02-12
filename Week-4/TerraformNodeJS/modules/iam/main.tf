@@ -270,3 +270,30 @@ resource "aws_iam_role_policy_attachment" "codebuild_logs_policy_attach" {
 }
 
 
+resource "aws_iam_policy" "codebuild_s3_policy" {
+  name        = "CodeBuild-S3-Policy"
+  description = "Allows CodeBuild to access S3 artifacts"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          "arn:aws:s3:::artifact-bucket-sajjan-build",
+          "arn:aws:s3:::artifact-bucket-sajjan-build/*"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "codebuild_s3_policy_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = aws_iam_policy.codebuild_s3_policy.arn
+}
