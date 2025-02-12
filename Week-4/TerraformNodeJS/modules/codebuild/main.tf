@@ -5,7 +5,8 @@ resource "aws_codebuild_project" "nodejs_build" {
   build_timeout = "10"
 
   artifacts {
-    type      = "NO_ARTIFACTS"
+    type     = "CODEPIPELINE"
+    location = var.s3_bucket
   }
 
   environment {

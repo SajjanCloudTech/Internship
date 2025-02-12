@@ -21,3 +21,8 @@ output "codepipeline_role_arn" {
 output "codedeploy_instance_profile" {
   value = aws_iam_instance_profile.codedeploy_instance_profile.name
 }
+
+output "codebuild_role_arn" {
+  description = "IAM Role ARN for CodeBuild"
+  value       = aws_iam_role.codebuild_role.arn
+}

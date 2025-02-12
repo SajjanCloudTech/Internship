@@ -1,37 +1,43 @@
 version: 0.2
 
+env:
+  variables:
+    AWS_REGION: "${AWS_REGION}"
+    ECR_REPOSITORY_URL: "${ECR_REPOSITORY_URL}"
+    ECR_REPO_NAME: "${ECR_REPO_NAME}"
+
 phases:
   install:
+    runtime-versions:
+      docker: latest
     commands:
-      - echo "Updating system..."
+      - echo "Installing required packages..."
       - yum update -y
       - yum install -y aws-cli unzip docker
+      - service docker start
 
   pre_build:
     commands:
       - echo "Logging into AWS ECR..."
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
-      - echo "Checking for old Docker images..."
-      - docker ps -q -f name=$ECR_REPOSITORY && docker stop $ECR_REPOSITORY && docker rm $ECR_REPOSITORY || echo "No existing container to remove."
-      - echo "Removing old Docker images..."
-      - docker images -q $ECR_REPOSITORY && docker rmi $ECR_REPOSITORY || echo "No old images found."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URL
+      - echo "Removing old Docker images (if any)..."
+      - docker images -q $ECR_REPO_NAME && docker rmi -f $(docker images -q $ECR_REPO_NAME) || echo "No old images found."
 
   build:
     commands:
-      - echo "Navigating to Dockerfile directory..."
-      - cd week-5/TerraformNodeJSTodoApp
-      - echo "Building Docker image..."
-      - docker build -t $ECR_REPOSITORY .
-      - docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      - echo "Building Docker image for Node.js To-Do App..."
+      - docker build -t $ECR_REPO_NAME .
+      - docker tag $ECR_REPO_NAME:latest $ECR_REPOSITORY_URL:latest
 
   post_build:
     commands:
       - echo "Pushing Docker image to AWS ECR..."
-      - docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-      - echo "Creating deployment artifact..."
-      - printf '{"ImageURI":"%s"}' $ECR_REGISTRY/$ECR_REPOSITORY:latest > imageDetail.json
-      - aws s3 cp imageDetail.json s3://$S3_BUCKET_NAME/imageDetail.json
-      - echo "Build completed successfully!"
+      - docker push $ECR_REPOSITORY_URL:latest
+      - echo "Generating deployment artifact..."
+      - printf '{"ImageURI":"%s"}' $ECR_REPOSITORY_URL:latest > imageDetail.json
+      - echo "Uploading deployment artifact to S3..."
+      - aws s3 cp imageDetail.json s3://$S3_BUCKET/imageDetail.json
+      - echo "Build and push completed successfully!"
 
 artifacts:
   files:

@@ -49,7 +49,24 @@ stage {
     }
   }
 
+  stage {
+    name = "Build"
 
+    action {
+      name             = "Build"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["SourceOutput"]
+      output_artifacts = ["BuildOutput"]
+      version          = "1"
+
+      configuration = {
+        ProjectName = var.codebuild_project_name
+      }
+    }
+  }
+  
   stage {
     name = "Deploy"
 

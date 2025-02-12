@@ -9,7 +9,15 @@ module "iam" {
 # S3 Bucket Module (Stores CodePipeline artifacts)
 module "s3" {
   source      = "../../Week-4/TerraformNodeJS/modules/s3"
+  # bucket_name = var.s3_bucket_name
   bucket_name = var.s3_bucket_name
+
+}
+
+# S3 Bucket Module (Stores CodeBuild artifacts)
+module "s3_codebuild" {
+  source      = "../../Week-4/TerraformNodeJS/modules/s3"
+  bucket_name = "${var.s3_bucket_name}-build"
 }
 
 module "ec2" {
@@ -39,4 +47,18 @@ module "codepipeline" {
   source_repo_id          = "SajjanCloudTech/Internship"
   source_repo_branch      = "main"
   codestar_connection_arn = var.codestar_connection_arn
+}
+
+module "ecr" {
+  source         = "../../Week-4/TerraformNodeJS/modules/ecr"
+  ecr_repo_name  = "nodejs-todo-app"
+}
+
+module "codebuild" {
+  source             = "../../Week-4/TerraformNodeJS/modules/codebuild"
+  codebuild_role_arn = module.iam.codebuild_role_arn
+  aws_region         = "us-east-1"
+  ecr_repository_url = module.ecr.repository_url
+  ecr_repo_name      = module.ecr.repository_name
+  s3_bucket = module.s3_codebuild.s3_bucket_name
 }

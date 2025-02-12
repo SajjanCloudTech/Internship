@@ -17,8 +17,9 @@ variable "source_repo_branch" {
 variable "codestar_connection_arn" {}
 
 
-# variable "codebuild_project_name" {
-# }
+variable "codebuild_project_name" {
+  default = "Codebuild"
+}
 
 # variable "ecr_repository_url" {
 # }
