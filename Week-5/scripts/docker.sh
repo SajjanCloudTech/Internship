@@ -31,6 +31,6 @@ docker build -t $APP_NAME .
 
 # Run the new container
 echo "Starting new container..."
-docker run -d -p $PORT:3000 --name $APP_NAME $APP_NAME
+docker run -d -p $PORT:3000 --name $APP_NAME 
 
 echo "Deployment successful!"
