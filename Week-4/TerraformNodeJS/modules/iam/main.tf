@@ -228,7 +228,7 @@ resource "aws_iam_role_policy_attachment" "codedeploy_s3_attach" {
 
 resource "aws_iam_role" "codebuild_role" {
   name = "codebuild-service-role"
-  
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -241,7 +241,32 @@ resource "aws_iam_role" "codebuild_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "codebuild_policy_attach" {
-  role       = aws_iam_role.codebuild_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess"
+resource "aws_iam_policy" "codebuild_logs_policy" {
+  name        = "CodeBuild-CloudWatch-Logs-Policy"
+  description = "Allows CodeBuild to create log streams in CloudWatch"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = [
+          "arn:aws:logs:us-east-2:664418970145:log-group:/aws/codebuild/*",
+          "arn:aws:logs:us-east-2:664418970145:log-group:/aws/codebuild/*:log-stream:*"
+        ]
+      }
+    ]
+  })
 }
+
+resource "aws_iam_role_policy_attachment" "codebuild_logs_policy_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = aws_iam_policy.codebuild_logs_policy.arn
+}
+
+

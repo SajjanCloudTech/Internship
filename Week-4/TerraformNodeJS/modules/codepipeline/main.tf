@@ -62,11 +62,11 @@ stage {
       version          = "1"
 
       configuration = {
-        ProjectName = var.codebuild_project_name
+        ProjectName = "NodeJS-Build"
       }
     }
   }
-  
+
   stage {
     name = "Deploy"
 
