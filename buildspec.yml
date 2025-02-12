@@ -19,6 +19,8 @@ phases:
   build:
     commands:
       - echo "Building Docker image for Node.js To-Do App..."
+      - pwd
+      - ls -la
       - docker build -t $ECR_REPO_NAME .
       - docker tag $ECR_REPO_NAME:latest $ECR_REPOSITORY_URL:latest
 
@@ -31,3 +33,4 @@ phases:
 artifacts:
   files:
     - "**/*"
+    - scripts

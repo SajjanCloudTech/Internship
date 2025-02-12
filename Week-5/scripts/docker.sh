@@ -25,10 +25,6 @@ if [ "$(docker images -q $APP_NAME)" ]; then
     docker rmi $APP_NAME
 fi
 
-# Build the new Docker image
-echo "Building new Docker image..."
-docker build -t $APP_NAME .
-
 # Run the new container
 echo "Starting new container..."
 docker run -d -p $PORT:3000 --name $APP_NAME $APP_NAME
