@@ -10,7 +10,7 @@ RUN npm install
 COPY . .
  
 # Stage 2: Create the production image
-FROM node:23-alpine3.20
+FROM public.ecr.aws/docker/library/node:23-alpine
  
 WORKDIR /app
  
