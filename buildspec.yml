@@ -5,16 +5,15 @@ env:
     AWS_REGION: "${AWS_REGION}"
     ECR_REPOSITORY_URL: "${ECR_REPOSITORY_URL}"
     ECR_REPO_NAME: "${ECR_REPO_NAME}"
+    S3_BUCKET: "${S3_BUCKET}"
 
 phases:
   install:
-    runtime-versions:
-      docker: latest
     commands:
       - echo "Installing required packages..."
       - yum update -y
       - yum install -y aws-cli unzip docker
-      - service docker start
+      - service docker start  # ✅ Explicitly starting Docker
 
   pre_build:
     commands:
