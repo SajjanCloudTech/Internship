@@ -281,7 +281,7 @@ resource "aws_iam_policy" "codebuild_s3_policy" {
         Effect = "Allow"
         Action = [
           "s3:GetObject",
-          "s3:GetObjectVersion",
+          "s3:GetObject",
           "s3:ListBucket"
         ]
         Resource = [
