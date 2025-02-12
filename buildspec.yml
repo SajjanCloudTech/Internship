@@ -12,7 +12,7 @@ phases:
     commands:
       - echo "Logging into AWS ECR..."
       - echo "${AWS_REGION} ${ECR_REPOSITORY_URL}"
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URL
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 664418970145.dkr.ecr.us-east-2.amazonaws.com
       - echo "Removing old Docker images (if any)..."
       - docker images -q $ECR_REPO_NAME && docker rmi -f $(docker images -q $ECR_REPO_NAME) || echo "No old images found."
 
