@@ -14,11 +14,11 @@ permissions:
     group: ec2-user
     mode: 755
 
-# hooks:
-#   AfterInstall:
-#     - location: Week-5/scripts/docker.sh
-#       timeout: 300
-#       runas: root
+hooks:
+  AfterInstall:
+    - location: Week-5/scripts/docker.sh
+      timeout: 300
+      runas: root
 
 
 # version: 0.0

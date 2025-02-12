@@ -1,17 +1,11 @@
 version: 0.2
 
-env:
-  variables:
-    AWS_REGION: "${AWS_REGION}"
-    ECR_REPOSITORY_URL: "${ECR_REPOSITORY_URL}"
-    ECR_REPO_NAME: "${ECR_REPO_NAME}"
-    S3_BUCKET: "${S3_BUCKET}"
-
 phases:
 
   pre_build:
     commands:
       - echo "Logging into AWS ECR..."
+      - echo "${AWS_REGION} ${ECR_REPOSITORY_URL}"
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URL
       - echo "Removing old Docker images (if any)..."
       - docker images -q $ECR_REPO_NAME && docker rmi -f $(docker images -q $ECR_REPO_NAME) || echo "No old images found."

@@ -324,7 +324,8 @@ resource "aws_iam_policy" "codebuild_ecr_policy" {
           "ecr:PutImage",
           "ecr:UploadLayerPart"
         ]
-        Resource = "arn:aws:ecr:us-east-2:664418970145:repository/${var.ecr_repo_name}"
+       Resource = "*"
+        # Resource = "arn:aws:ecr:us-east-2:664418970145:repository/${var.ecr_repo_name}"
       }
     ]
   })
@@ -333,4 +334,61 @@ resource "aws_iam_policy" "codebuild_ecr_policy" {
 resource "aws_iam_role_policy_attachment" "codebuild_ecr_policy_attach" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = aws_iam_policy.codebuild_ecr_policy.arn
+}
+
+resource "aws_iam_policy" "codedeploy_policy" {
+  name        = "CodeDeploy-Full-Access"
+  description = "Allows full access to AWS CodeDeploy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "codedeploy:GetApplication",
+          "codedeploy:GetDeploymentGroup",
+          "codedeploy:ListApplications",
+          "codedeploy:ListDeploymentGroups",
+          "codedeploy:CreateDeployment",
+          "codedeploy:GetDeployment",
+          "codedeploy:RegisterApplicationRevision"
+        ]
+        Resource = "arn:aws:codedeploy:us-east-2:664418970145:application:NodeJSApp"
+      }
+    ]
+  })
+}
+
+# resource "aws_iam_role_policy_attachment" "codedeploy_attach" {
+#   role       = aws_iam_role.codebuild_role.name
+#   policy_arn = aws_iam_policy.codedeploy_policy.arn
+# }
+
+resource "aws_iam_policy" "ecr_policy" {
+  name        = "ECR-Full-Access"
+  description = "Allows full access to AWS ECR"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:ListTagsForResource",
+          "ecr:DescribeRepositories",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetAuthorizationToken"
+        ]
+        Resource = "arn:aws:ecr:us-east-2:664418970145:repository/nodejs-todo-app"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = aws_iam_policy.ecr_policy.arn
 }
