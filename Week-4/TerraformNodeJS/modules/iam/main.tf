@@ -285,10 +285,10 @@ resource "aws_iam_policy" "codebuild_s3_policy" {
           "s3:ListBucket"
         ]
         Resource = [
-          # "arn:aws:s3:::artifact-bucket-sajjan",    
-          # "arn:aws:s3:::artifact-bucket-sajjan/*",
-          "arn:aws:s3:::artifact-bucket-sajjan-build",
-          "arn:aws:s3:::artifact-bucket-sajjan-build/*"
+          "arn:aws:s3:::artifact-bucket-sajjan",    
+          "arn:aws:s3:::artifact-bucket-sajjan/*",
+          # "arn:aws:s3:::artifact-bucket-sajjan-build",
+          # "arn:aws:s3:::artifact-bucket-sajjan-build/*"
         ]
       }
     ]

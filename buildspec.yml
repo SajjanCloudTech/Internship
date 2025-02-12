@@ -19,11 +19,11 @@ phases:
   build:
     commands:
       - echo "Building Docker image for Node.js To-Do App..."
-      - pwd
-      - ls -la
       - cd Week-5/todoapp
       - docker build -t $ECR_REPO_NAME .
       - docker tag $ECR_REPO_NAME:latest $ECR_REPOSITORY_URL:latest
+      - echo "Verifying Docker image was built successfully..."
+      - docker images | grep $ECR_REPO_NAME || (echo "Error: Docker image was not built!" && exit 1)
 
   post_build:
     commands:
