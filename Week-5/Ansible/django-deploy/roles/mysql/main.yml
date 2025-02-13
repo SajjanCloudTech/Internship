@@ -1,0 +1,40 @@
+---
+- name: Install MariaDB server and client
+  yum:
+    name:
+      - mariadb-server
+      - mariadb
+    state: present
+    update_cache: yes
+
+- name: Ensure MariaDB service is running and enabled
+  service:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: Secure MariaDB installation
+  command: >
+    mysql_secure_installation
+    --defaults-file=/etc/my.cnf
+    {{ '--password=' ~ mysql_root_password if mysql_root_password is defined else '' }}
+  when: mysql_root_password is defined
+  become: yes
+  args:
+    creates: /var/lib/mysql/mysql.sock  # Prevents running if MySQL is already secured
+
+- name: Create MySQL database
+  mysql_db:
+    name: "{{ mysql_database }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Create MySQL user
+  mysql_user:
+    name: "{{ mysql_user }}"
+    password: "{{ mysql_password }}"
+    priv: "{{ mysql_database }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"

@@ -1,0 +1,14 @@
+django_project_dir: /home/ec2-user/simple-django-project
+django_repo_url: "https://github.com/Manisha-Bayya/simple-django-project.git"
+django_settings_module: "panorbit.settings"
+django_secret_key: "your-secret-key"
+gunicorn_socket: "/run/gunicorn.sock"
+
+mysql_db_name: "world"
+mysql_user: "sajjan"
+mysql_password: "sajjan"
+mysql_host: "localhost"
+mysql_port: "3306"
+
+admin_email: "sajjan@example.com"
+admin_email_password: "sajjan"

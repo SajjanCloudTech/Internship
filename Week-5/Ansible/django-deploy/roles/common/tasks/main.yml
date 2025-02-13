@@ -1,0 +1,40 @@
+---
+- name: Update yum cache
+  yum:
+    update_cache: yes
+  become: yes
+
+- name: Install required packages
+  yum:
+    name:
+      - python3
+      - python3-pip
+      - python3-virtualenv
+      - git
+      - nginx
+      - mariadb105-server  # Correct package name for MariaDB in Amazon Linux 2023
+      - mariadb105         # MariaDB client
+      - mariadb105-devel   # MariaDB development files
+      - policycoreutils    # SELinux utilities
+      - gcc                  # C compiler needed for building dependencies
+      - gcc-c++              # C++ compiler
+      - make                 # Required for compiling packages
+      - python3-devel        # Python headers needed for pip installs
+      - pkg-config           # Helps locate MySQL libraries
+      - libffi-devel         # Required for cryptography and cffi
+      - openssl-devel        # OpenSSL headers required for cryptography package
+    state: present
+  become: yes
+
+- name: Enable and start MariaDB service
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Install PyMySQL using pip
+  pip:
+    name: PyMySQL
+    executable: pip3
+  become: yes

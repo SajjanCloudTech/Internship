@@ -1,0 +1,28 @@
+---
+- name: Install firewalld
+  dnf:
+    name: firewalld
+    state: present
+  become: yes
+
+- name: Enable and start firewalld
+  systemd:
+    name: firewalld
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Allow SSH, HTTP, and HTTPS through firewalld
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: yes
+    state: enabled
+  loop:
+    - 22
+    - 80
+    - 443
+  become: yes
+
+- name: Reload firewalld to apply rules
+  command: firewall-cmd --reload
+  become: yes

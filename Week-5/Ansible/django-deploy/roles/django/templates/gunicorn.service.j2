@@ -1,0 +1,20 @@
+[Unit]
+Description=Gunicorn daemon for Django app
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory={{ django_project_dir }}
+ExecStart={{ django_project_dir }}/venv/bin/gunicorn --workers 3 --bind unix:/run/gunicorn.sock --umask 007 {{ django_settings_module }}:application
+Restart=always
+Environment="PATH={{ django_project_dir }}/venv/bin"
+
+# Ensure /run/gunicorn exists before starting Gunicorn
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /run/gunicorn
+ExecStartPre=/bin/chown ec2-user:nginx /run/gunicorn
+ExecStartPre=/bin/chmod 770 /run/gunicorn
+
+[Install]
+WantedBy=multi-user.target

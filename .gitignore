@@ -1,17 +1,5 @@
-# Ignore Terraform-related directories and state files in Week-2
-Week-2/terraform/terraform-aws/.terraform/
-Week-2/terraform/terraform-aws/*.tfstate
-Week-2/terraform/terraform-aws/*.tfstate.*
-
-# Ignore Terraform-related directories and state files in Week-3
-Week-3/terraform-week3/environments/dev/.terraform/
-Week-3/terraform-week3/environments/dev/*.tfstate
-Week-3/terraform-week3/environments/dev/*.tfstate.*
-
 # Global Terraform ignores (if Terraform is used in other directories)
 .terraform/
 *.tfstate
 *.tfstate.*
 
-# Testing Jenkins 1
-# test.txt

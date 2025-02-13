@@ -1,0 +1,10 @@
+---
+- name: Deploy Django Site on EC2
+  hosts: webservers
+  become: yes
+
+  roles:
+    - common
+    - django
+    - nginx
+    - firewall

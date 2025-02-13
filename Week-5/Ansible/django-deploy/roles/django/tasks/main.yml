@@ -1,0 +1,79 @@
+---
+- name: Ensure Python3, pip, and virtualenv are installed
+  dnf:
+    name:
+      - python3
+      - python3-pip
+      - python3-virtualenv
+    state: present
+  become: yes
+
+- name: Generate requirements.txt from template
+  template:
+    src: requirements.txt.j2
+    dest: "{{ django_project_dir }}/requirements.txt"
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+  become: yes
+
+- name: Ensure virtual environment is created
+  command: python3 -m venv "{{ django_project_dir }}/venv"
+  args:
+    creates: "{{ django_project_dir }}/venv/bin/activate"
+  become: yes
+
+- name: Upgrade pip and setuptools inside virtualenv
+  command: "{{ django_project_dir }}/venv/bin/python3 -m pip install --upgrade pip setuptools"
+  become: yes
+
+- name: Install Django dependencies
+  pip:
+    requirements: "{{ django_project_dir }}/requirements.txt"
+    virtualenv: "{{ django_project_dir }}/venv"
+  become: yes
+
+- name: Install Gunicorn inside the virtual environment
+  pip:
+    name: gunicorn
+    virtualenv: "{{ django_project_dir }}/venv"
+  become: yes
+
+- name: Copy Gunicorn systemd service file
+  template:
+    src: gunicorn.service.j2
+    dest: /etc/systemd/system/gunicorn.service
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: Start and enable Gunicorn service
+  systemd:
+    name: gunicorn
+    state: restarted
+    enabled: yes
+  become: yes
+  register: gunicorn_status
+  retries: 3
+  delay: 5
+  until: gunicorn_status is success
+
+- name: Restart Gunicorn service
+  systemd:
+    name: gunicorn
+    state: restarted
+    enabled: yes
+  become: yes
+
+- name: Restart Nginx service
+  systemd:
+    name: nginx
+    state: restarted
+    enabled: yes
+  become: yes

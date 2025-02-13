@@ -1,0 +1,20 @@
+server {
+    listen 80;
+    server_name {{ ansible_host }};
+
+    location / {
+        proxy_pass http://unix:/run/gunicorn.sock;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /static/ {
+        alias {{ django_project_dir }}/static/;
+    }
+
+    location /media/ {
+        alias {{ django_project_dir }}/media/;
+    }
+}
