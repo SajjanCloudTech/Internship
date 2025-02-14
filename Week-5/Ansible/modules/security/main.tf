@@ -46,18 +46,18 @@ resource "aws_network_interface" "NIC" {
 
 }
 
-# Creating and assigning Elastic IP
-resource "aws_eip" "eip" {
-  domain                    = "vpc"
-  network_interface         = aws_network_interface.NIC.id
-  associate_with_private_ip = "10.0.1.50"
-  depends_on                = [aws_internet_gateway.IGW]
-}
+# # Creating and assigning Elastic IP
+# resource "aws_eip" "eip" {
+#   domain                    = "vpc"
+#   network_interface         = aws_network_interface.NIC.id
+#   associate_with_private_ip = "10.0.1.50"
+#   depends_on                = [aws_internet_gateway.IGW]
+# }
 
-resource "aws_eip_association" "eip_assoc" {
-  instance_id   = var.instance_id
-  allocation_id = aws_eip.eip.id
- }
+# resource "aws_eip_association" "eip_assoc" {
+#   instance_id   = var.instance_id
+#   allocation_id = aws_eip.eip.id
+#  }
 
 # Creating Internet Gateway
 resource "aws_internet_gateway" "IGW" {
